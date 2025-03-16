@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	address := "localhost:9999"
+	address := "0.0.0.0:9999"
 	path, handler := renderv1connect.NewRenderServiceHandler(&RenderServer{})
 	mux := http.NewServeMux()
 	mux.Handle(path, handler)

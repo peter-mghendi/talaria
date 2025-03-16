@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+announce:
+  skip: true
+
+changelog:
+  use: git
+  filters:
+    exclude:
+      - "^Create"
+      - "^Update"
+      - "^Set up"
+      - "^Tidy"
+builds:
+  - mod_timestamp: "{{ .CommitTimestamp }}"
+    main: ./cmd/server
+    flags:
+      - -trimpath
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - "freebsd"
+      - "linux"
+      - "windows"
+      - "darwin"
+    goarch:
+      - "amd64"
+      - "386"
+      - "arm"
+      - "arm64"
+    goarm:
+      - "6"
+      - "7"
+universal_binaries:
+  - replace: false
+
+archives:
+  - wrap_in_directory: true
+    formats: ['binary', 'tar.gz']
+    name_template: >-
+      {{ .ProjectName }}-v
+      {{- .Version }}_
+      {{- .Os }}_
+      {{- if eq .Arch "all" }}universal
+      {{- else if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        formats: ['binary', 'zip']
+
+dockers:
+  - use: buildx
+    dockerfile: Dockerfile
+    image_templates:
+      - "ghcr.io/peter-mghendi/talaria:{{.Tag}}-amd64"
+      - "ghcr.io/peter-mghendi/talaria:latest-amd64"
+      - "petermghendi/talaria:{{.Tag}}-amd64"
+      - "petermghendi/talaria:latest-amd64"
+    build_flag_templates:
+      - "--pull"
+      - "--platform=linux/amd64"
+    goarch: amd64
+  - use: buildx
+    dockerfile: Dockerfile
+    image_templates:
+      - "ghcr.io/peter-mghendi/talaria:{{.Tag}}-arm64"
+      - "ghcr.io/peter-mghendi/talaria:latest-arm64"
+      - "petermghendi/talaria:{{.Tag}}-arm64"
+      - "petermghendi/talaria:latest-arm64"
+    build_flag_templates:
+      - "--pull"
+      - "--platform=linux/arm64"
+    goarch: arm64
+
+docker_manifests:
+  - name_template: "ghcr.io/peter-mghendi/talaria:{{ .Tag }}"
+    image_templates:
+      - "ghcr.io/peter-mghendi/talaria:{{ .Tag }}-amd64"
+      - "ghcr.io/peter-mghendi/talaria:{{ .Tag }}-arm64"
+  - name_template: "ghcr.io/peter-mghendi/talaria:latest"
+    image_templates:
+      - "ghcr.io/peter-mghendi/talaria:latest-amd64"
+      - "ghcr.io/peter-mghendi/talaria:latest-arm64"
+  - name_template: "petermghendi/talaria:{{ .Tag }}"
+    image_templates:
+      - "petermghendi/talaria:{{ .Tag }}-amd64"
+      - "petermghendi/talaria:{{ .Tag }}-arm64"
+  - name_template: "petermghendi/talaria:latest"
+    image_templates:
+      - "petermghendi/talaria:latest-amd64"
+      - "petermghendi/talaria:latest-arm64"

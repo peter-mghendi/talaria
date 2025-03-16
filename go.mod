@@ -4,6 +4,7 @@ go 1.23.4
 
 require (
 	connectrpc.com/connect v1.18.1
+	github.com/go-hermes/hermes/v2 v2.3.0
 	golang.org/x/net v0.37.0
 	google.golang.org/protobuf v1.34.2
 )
@@ -14,8 +15,6 @@ require (
 	github.com/Masterminds/sprig v2.22.0+incompatible // indirect
 	github.com/PuerkitoBio/goquery v1.10.2 // indirect
 	github.com/andybalholm/cascadia v1.3.3 // indirect
-	github.com/aokoli/goutils v1.1.1 // indirect
-	github.com/go-hermes/hermes/v2 v2.3.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/huandu/xstrings v1.5.0 // indirect
