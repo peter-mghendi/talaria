@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package render.v1;
+
+option go_package = "github.com/peter-mghendi/talaria/internal/gen/render/v1;renderv1";
+
+message RenderRequest {
+  // TODO: Add the fields used to render the email.  
+}
+
+message RenderResponse {
+  string html = 2;
+  string text = 3;
+}
+
+message RenderStreamRequest {
+    string identifier = 1;  
+    RenderRequest request = 2; 
+}
+
+message RenderStreamResponse {
+    string identifier = 1;  
+    RenderResponse response = 2; 
+}
+
+service RenderService {
+  rpc Render(RenderRequest) returns (RenderResponse) {}
+
+  rpc RenderStream(stream RenderStreamRequest) returns (stream RenderStreamResponse) {}
+}
