@@ -4,27 +4,106 @@ package render.v1;
 
 option go_package = "github.com/peter-mghendi/talaria/internal/gen/render/v1;renderv1";
 
-message RenderRequest {
-  // TODO: Add the fields used to render the email.  
-}
-
-message RenderResponse {
-  string html = 2;
-  string text = 3;
-}
-
-message RenderStreamRequest {
-    string identifier = 1;  
-    RenderRequest request = 2; 
-}
-
-message RenderStreamResponse {
-    string identifier = 1;  
-    RenderResponse response = 2; 
-}
-
 service RenderService {
   rpc Render(RenderRequest) returns (RenderResponse) {}
-
   rpc RenderStream(stream RenderStreamRequest) returns (stream RenderStreamResponse) {}
+}
+
+// RenderRequest contains the necessary data to generate an email.
+message RenderRequest {
+  Hermes hermes = 1;
+  Email email = 2;
+}
+
+// RenderResponse contains the rendered email output.
+message RenderResponse {
+  string html = 1;
+  string text = 2;
+}
+
+// RenderStreamRequest represents a request for the streaming render service.
+message RenderStreamRequest {
+  string identifier = 1;
+  RenderRequest request = 2;
+}
+
+// RenderStreamResponse contains the rendered output for a streaming request.
+message RenderStreamResponse {
+  string identifier = 1;
+  RenderResponse response = 2;
+}
+
+// Hermes represents the email generator instance
+message Hermes {
+  string theme = 1;
+  string text_direction = 2;
+  Product product = 3;
+  bool disable_css_inlining = 4;
+}
+
+// Product represents the brand/product details
+message Product {
+  string name = 1;
+  string link = 2;
+  string logo = 3;
+  string copyright = 4;
+  string trouble_text = 5;
+}
+
+// Email represents an email with a body
+message Email {
+  Body body = 1;
+}
+
+// Body represents the content of the email
+message Body {
+  string name = 1;
+  repeated string intros = 2;
+  string intros_markdown = 3;
+  repeated string intros_unsafe = 4;
+  repeated Entry dictionary = 5;
+  repeated Table tables = 6;
+  repeated Action actions = 7;
+  string outros_markdown = 8;
+  repeated string outros_unsafe = 9;
+  repeated string outros = 10;
+  string greeting = 11;
+  string signature = 12;
+  string title = 13;
+  string free_markdown = 14;
+}
+
+// Entry represents a key-value pair
+message Entry {
+  string key = 1;
+  string value = 2;
+  string unsafe_value = 3;
+}
+
+// Table represents structured data
+message Table {
+  string title = 1;
+  repeated Entry data = 2;
+  Columns columns = 3;
+}
+
+// Columns contains meta-data for the table columns
+message Columns {
+  map<string, string> custom_width = 1;
+  map<string, string> custom_alignment = 2;
+}
+
+// Action represents an action a user can take
+message Action {
+  string instructions = 1;
+  Button button = 2;
+  string invite_code = 3;
+}
+
+// Button represents a clickable button in an email
+message Button {
+  string color = 1;
+  string text_color = 2;
+  string text = 3;
+  string link = 4;
 }
