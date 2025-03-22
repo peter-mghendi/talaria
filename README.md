@@ -2,7 +2,7 @@
 
 Fast, Lightweight Email Rendering Over gRPC, gRPC-Web, HTTP, and Connect
 
-Talaria is a high-performance email rendering service designed for modern applications. It provides a structured way to generate HTML and plain-text emails using a flexible API that supports **gRPC, gRPC-Web, HTTP, and Connect**.
+Talaria is a high-performance email rendering service built around the excellent [Hermes](https://github.com/go-hermes/hermes) library. It provides a structured way to generate HTML and plain-text emails using a flexible API that supports **gRPC, gRPC-Web, HTTP, and Connect**.
 
 ## Features
 
@@ -29,6 +29,10 @@ docker run -p 9999:9999 petermghendi/talaria:latest
 docker run -p 9999:9999 ghcr.io/peter-mghendi/talaria:latest
 ```
 
+### Pre-Built Binaries
+
+Pre-compiled binaries for major platforms are available on the [Releases Page](https://github.com/peter-mghendi/talaria/releases).
+
 ### Running Locally
 
 Talaria is built in **Go** and can be run directly:
@@ -39,13 +43,11 @@ cd talaria
 go run cmd/server/main.go
 ```
 
-### Pre-Built Binaries
-
-Pre-compiled binaries for major platforms are available on the [Releases Page](https://github.com/peter-mghendi/talaria/releases).
-
 ## Usage
 
 ### API Overview
+
+> See [render.proto](https://github.com/peter-mghendi/talaria/blob/main/render/v1/render.proto) for use with gRPC clients.
 
 Talaria exposes the following APIs:
 
@@ -146,21 +148,6 @@ ghz --insecure \
     localhost:9999
 ```
 
-## Configuration
-
-Talaria allows configuration via **environment variables**:
-
-| Variable               | Description                                 | Default |
-|------------------------|---------------------------------------------|---------|
-| `PORT`                 | Server port                                 | `9999`  |
-| `LOG_LEVEL`            | Logging level (`info`, `debug`, `warn`)     | `info`  |
-
-Example:
-
-```sh
-PORT=8080 LOG_LEVEL=debug go run main.go
-```
-
 ## Deployment
 
 ### **Using Docker Compose**
@@ -187,7 +174,7 @@ docker-compose up -d
 
 ### **Building from Source**
 ```sh
-go build -o talaria main.go
+go build -o talaria cmd/server/main.go
 ```
 
 ### **Running Tests**
@@ -206,8 +193,8 @@ buf generate
 Contributions are welcome! Please follow these steps:
 
 1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-name`).
-3. Commit changes (`git commit -m "Add feature"`).
+2. Create a new branch (`git switch --create feature-name`).
+3. Commit changes (`git commit --message "Add feature"`).
 4. Push the branch (`git push origin feature-name`).
 5. Open a Pull Request.
 
